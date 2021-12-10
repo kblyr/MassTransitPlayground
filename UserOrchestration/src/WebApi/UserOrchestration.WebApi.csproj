@@ -7,7 +7,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="MassTransit" Version="7.3.0" />
+    <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Contracts\UserOrchestration.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="AutoMapper" />
+    <Using Include="MassTransit" />
+    <Using Include="UserOrchestration.Commands" />
+    <Using Include="UserOrchestration.Endpoints" />
+    <Using Include="UserOrchestration.Events" />
+    <Using Include="UserOrchestration.Exceptions" />
+    <Using Include="UserOrchestration.Responses" />
+    <Using Include="UserOrchestration.Schema" />
   </ItemGroup>
 
 </Project>
