@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserOrchestration.UserOrche
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserOrchestration.UserEmailOrchestratorService", "src\UserEmailOrchestratorService\UserOrchestration.UserEmailOrchestratorService.csproj", "{39F6F723-20AB-4808-9590-3BAB9B6357E8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserOrchestration.WebApi", "src\WebApi\UserOrchestration.WebApi.csproj", "{EC3D9F84-154B-48BC-8870-43529285837D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,10 +34,15 @@ Global
 		{39F6F723-20AB-4808-9590-3BAB9B6357E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39F6F723-20AB-4808-9590-3BAB9B6357E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39F6F723-20AB-4808-9590-3BAB9B6357E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC3D9F84-154B-48BC-8870-43529285837D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC3D9F84-154B-48BC-8870-43529285837D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC3D9F84-154B-48BC-8870-43529285837D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC3D9F84-154B-48BC-8870-43529285837D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{ABB9C9D4-9C9C-4534-A74F-59C8C12D1D0E} = {A5DC18C0-D2C7-4600-900C-80E9B4115E6F}
 		{0FAD2F09-17F6-46E1-A546-806EE5E90072} = {A5DC18C0-D2C7-4600-900C-80E9B4115E6F}
 		{39F6F723-20AB-4808-9590-3BAB9B6357E8} = {A5DC18C0-D2C7-4600-900C-80E9B4115E6F}
+		{EC3D9F84-154B-48BC-8870-43529285837D} = {A5DC18C0-D2C7-4600-900C-80E9B4115E6F}
 	EndGlobalSection
 EndGlobal
