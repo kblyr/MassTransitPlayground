@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A5DC18C0-D2C7-4600-900C-80E9B4115E6F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserOrchestration.Contracts", "src\Contracts\UserOrchestration.Contracts.csproj", "{ABB9C9D4-9C9C-4534-A74F-59C8C12D1D0E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +16,12 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ABB9C9D4-9C9C-4534-A74F-59C8C12D1D0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABB9C9D4-9C9C-4534-A74F-59C8C12D1D0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABB9C9D4-9C9C-4534-A74F-59C8C12D1D0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABB9C9D4-9C9C-4534-A74F-59C8C12D1D0E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{ABB9C9D4-9C9C-4534-A74F-59C8C12D1D0E} = {A5DC18C0-D2C7-4600-900C-80E9B4115E6F}
 	EndGlobalSection
 EndGlobal
