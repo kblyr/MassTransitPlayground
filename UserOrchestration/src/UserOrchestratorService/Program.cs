@@ -27,8 +27,8 @@ try
         services.AddMassTransit(massTransit => {
             massTransit.AddSagaStateMachine<UserSM, UserSMI>()
                 .MongoDbRepository("mongodb://root:root@localhost:27017/?authSource=admin&readPreference=primary", config => {
-                    config.DatabaseName = "UserOrchestration";
-                    config.CollectionName = "UserStateMachine";
+                    config.DatabaseName = "user_orchestration";
+                    config.CollectionName = "user_sm";
                 });
 
             massTransit.UsingRabbitMq((context, rabbitMq) => {
