@@ -10,12 +10,13 @@ static class UserEndpoints
             .WithTags("User")
             .Accepts<CreateUserRequest>(MediaTypeNames.Application.Json)
             .Produces<int>(StatusCodes.Status201Created)
+            .Produces<CreateUserFailedResponse>(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status500InternalServerError);
 
         return builder;
     }
 
-    static async Task<IResult> CreateUserAsync(ILogger logger, IMapper mapper, IRequestClient<CreateUser> createUserClient, CreateUserRequest request, CancellationToken cancellationToken)
+    static async Task<IResult> CreateUserAsync(ILogger<Program> logger, IMapper mapper, IRequestClient<CreateUser> createUserClient, CreateUserRequest request, CancellationToken cancellationToken)
     {
         logger.LogDebug("POST /user");
         var createUser = mapper.Map<CreateUser>(request);
@@ -33,14 +34,14 @@ static class UserEndpoints
             logger.LogDebug("Create user failed");
             var response = await createUserFailed;
 
-            switch(response)
+            switch(response.Message)
             {
                 case UsernameAlreadyExists error:
                     logger.LogDebug("Username already exists");
-                    return Results.BadRequest(mapper.Map<UsernameAlreadyExistsResponse>(error));
+                    return Results.BadRequest(mapper.Map<CreateUserFailedResponse>(error));
                 case UserEmailAddressAlreadyExists error:
                     logger.LogDebug("User email address already exists");
-                    return Results.BadRequest(mapper.Map<UserEmailAddressAlreadyExistsResponse>(error));
+                    return Results.BadRequest(mapper.Map<CreateUserFailedResponse>(error));
             }
         }
 
