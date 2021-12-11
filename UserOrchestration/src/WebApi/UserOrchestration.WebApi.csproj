@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Contracts\UserOrchestration.Contracts.csproj" />
+    <ProjectReference Include="..\Core\UserOrchestration.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
