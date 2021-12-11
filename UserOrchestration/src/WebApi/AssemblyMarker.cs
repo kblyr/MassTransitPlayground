@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace UserOrchestration.EntityFrameworkCore;
+namespace UserOrchestration.WebApi;
 
 public static class AssemblyMarker
 {

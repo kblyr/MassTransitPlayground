@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Core\UserOrchestration.Core.csproj" />
+    <ProjectReference Include="..\EntityFrameworkCore\UserOrchestration.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>

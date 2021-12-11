@@ -1,8 +1,10 @@
+using System.Reflection;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddAutoMapper(AutoMapper_MarkedAssemblies());
 builder.Services.AddMediator(mediator => {
     mediator.AddRequestClient<CreateUser>();
 });
@@ -18,3 +20,9 @@ if (app.Environment.IsDevelopment())
 app.MapUserEndpoints();
 
 app.Run();
+
+static Assembly[] AutoMapper_MarkedAssemblies() => new Assembly[]
+{
+    UserOrchestration.EntityFrameworkCore.AssemblyMarker.Assembly,
+    UserOrchestration.WebApi.AssemblyMarker.Assembly
+};
