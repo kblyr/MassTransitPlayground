@@ -22,6 +22,11 @@ static class UserEndpoints
             .Produces(StatusCodes.Status204NoContent)
             .Produces<ActivateUserFailedResponse>(StatusCodes.Status400BadRequest);
 
+        builder.MapPut("/user/{id}/deactivate", DeactivateAsync)
+            .WithTags("User")
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces<DeactivateUserFailedResponse>(StatusCodes.Status400BadRequest);
+
         return builder;
     }
 
@@ -88,6 +93,28 @@ static class UserEndpoints
             logger.LogDebug("Activate user failed");
             var response = await activateUserFailed.ConfigureAwait(false);
             return Results.BadRequest(mapper.Map<ActivateUserFailedResponse>(response.Message));
+        }
+
+        throw new UnsupportedResponseException();
+    }
+
+    static async Task<IResult> DeactivateAsync(ILogger<Program> logger, IMapper mapper, IRequestClient<DeactivateUser> deactivateUserClient, int id, CancellationToken cancellationToken)
+    {
+        logger.Http().Put("/user/{id}/deactivate");
+        var (userDeactivated, deactivateUserFailed) = await deactivateUserClient.GetResponse<UserDeactivated, DeactivateUserFailed>(new DeactivateUser(id), cancellationToken).ConfigureAwait(false);
+
+        if (userDeactivated.IsCompletedSuccessfully)
+        {
+            logger.LogDebug("Deactivate user succeeded");
+            var response = await userDeactivated.ConfigureAwait(false);
+            return Results.NoContent();
+        }
+
+        if (deactivateUserFailed.IsCompletedSuccessfully)
+        {
+            logger.LogDebug("Deactivate user failed");
+            var response = await deactivateUserFailed.ConfigureAwait(false);
+            return Results.BadRequest(mapper.Map<DeactivateUserFailedResponse>(response.Message));
         }
 
         throw new UnsupportedResponseException();

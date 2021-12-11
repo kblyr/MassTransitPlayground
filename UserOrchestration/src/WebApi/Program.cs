@@ -37,9 +37,10 @@ try
 
     Log.Information("Adding MassTransit to the DI Container");
     builder.Services.AddMassTransit(massTransit => {
-        massTransit.AddRequestClient<ActivateUser>();
         massTransit.AddRequestClient<CreateUser>();
         massTransit.AddRequestClient<GetUser>();
+        massTransit.AddRequestClient<ActivateUser>();
+        massTransit.AddRequestClient<DeactivateUser>();
 
         massTransit.AddConsumersFromEntityFrameworkCore();
         massTransit.UsingRabbitMq((context, rabbitMq) => {

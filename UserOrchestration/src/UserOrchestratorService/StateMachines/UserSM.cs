@@ -17,6 +17,7 @@ sealed class UserSM : MassTransitStateMachine<UserSMI>
 
     public Event<UserCreated> UserCreated { get; private set; } = default!;
     public Event<UserActivated> UserActivated { get; private set; } = default!;
+    public Event<UserDeactivated> UserDeactivated { get; private set; } = default!;
 
     void ConfigureEvents()
     {
@@ -30,6 +31,13 @@ sealed class UserSM : MassTransitStateMachine<UserSMI>
         );
 
         Event(() => UserActivated,
+            correlation => {
+                correlation.CorrelateBy((instance, context) => instance.UserId == context.Message.Id)
+                    .SelectId(context => NewId.NextGuid());
+            }
+        );
+
+        Event(() => UserDeactivated,
             correlation => {
                 correlation.CorrelateBy((instance, context) => instance.UserId == context.Message.Id)
                     .SelectId(context => NewId.NextGuid());
@@ -50,16 +58,23 @@ sealed class UserSM : MassTransitStateMachine<UserSMI>
                 .TransitionTo(Inactive),
             When(UserActivated)
                 .Then(OnUserActivated)
-                .TransitionTo(Active)
+                .TransitionTo(Active),
+            When(UserDeactivated)
+                .Then(OnUserDeactivated)
+                .TransitionTo(Inactive)
         );
 
         During(Active,
             Ignore(UserCreated),
-            Ignore(UserActivated)
+            Ignore(UserActivated),
+            When(UserDeactivated)
+                .Then(OnUserDeactivated)
+                .TransitionTo(Inactive)
         );
 
         During(Inactive,
             Ignore(UserCreated),
+            Ignore(UserDeactivated),
             When(UserActivated)
                 .Then(OnUserActivated)
                 .TransitionTo(Active)
@@ -78,6 +93,13 @@ sealed class UserSM : MassTransitStateMachine<UserSMI>
         _logger.LogTrace("User was activated");
         context.Instance.UserId = context.Data.Id;
         context.Instance.IsActive = true;
+    }
+
+    void OnUserDeactivated(BehaviorContext<UserSMI, UserDeactivated> context)
+    {
+        _logger.LogTrace("User was deactivated");
+        context.Instance.UserId = context.Data.Id;
+        context.Instance.IsActive = false;
     }
 }
 
