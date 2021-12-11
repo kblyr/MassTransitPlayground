@@ -38,6 +38,7 @@ try
     Log.Information("Adding MassTransit to the DI Container");
     builder.Services.AddMediator(mediator => {
         mediator.AddRequestClient<CreateUser>();
+        mediator.AddRequestClient<GetUser>();
         mediator.AddConsumersFromEntityFrameworkCore();
     });
 

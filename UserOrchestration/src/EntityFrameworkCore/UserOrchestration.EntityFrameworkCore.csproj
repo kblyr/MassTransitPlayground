@@ -30,6 +30,8 @@
     <Using Include="UserOrchestration.Entities" />
     <Using Include="UserOrchestration.EntityFrameworkCore" />
     <Using Include="UserOrchestration.Events" />
+    <Using Include="UserOrchestration.Logging" />
+    <Using Include="UserOrchestration.Queries" />
     <Using Include="UserOrchestration.Responses" />
     <Using Include="UserOrchestration.Utilities" />
   </ItemGroup>

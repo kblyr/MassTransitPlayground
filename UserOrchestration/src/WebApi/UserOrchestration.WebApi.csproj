@@ -31,6 +31,8 @@
     <Using Include="UserOrchestration.Endpoints" />
     <Using Include="UserOrchestration.Events" />
     <Using Include="UserOrchestration.Exceptions" />
+    <Using Include="UserOrchestration.Logging" />
+    <Using Include="UserOrchestration.Queries" />
     <Using Include="UserOrchestration.Responses" />
     <Using Include="UserOrchestration.Schema" />
   </ItemGroup>

@@ -1,5 +1,5 @@
 namespace UserOrchestration.Responses;
 
-public interface ICreateUserFailed
+public interface IGetUserFailed
 {
 }

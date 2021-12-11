@@ -6,19 +6,52 @@ static class UserEndpoints
 {
     public static IEndpointRouteBuilder MapUserEndpoints(this IEndpointRouteBuilder builder)
     {
-        builder.MapPost("/user", CreateUserAsync)
+        builder.MapGet("/user/{id}", GetAsync)
+            .WithTags("User")
+            .Produces<GetUserResponse>(StatusCodes.Status200OK)
+            .Produces<GetUserFailedResponse>(StatusCodes.Status404NotFound);
+
+        builder.MapPost("/user", CreateAsync)
             .WithTags("User")
             .Accepts<CreateUserRequest>(MediaTypeNames.Application.Json)
             .Produces<int>(StatusCodes.Status201Created)
-            .Produces<CreateUserFailedResponse>(StatusCodes.Status400BadRequest)
-            .ProducesProblem(StatusCodes.Status500InternalServerError);
+            .Produces<CreateUserFailedResponse>(StatusCodes.Status400BadRequest);
 
         return builder;
     }
 
-    static async Task<IResult> CreateUserAsync(ILogger<Program> logger, IMapper mapper, IRequestClient<CreateUser> createUserClient, CreateUserRequest request, CancellationToken cancellationToken)
+    static async Task<IResult> GetAsync(ILogger<Program> logger, IMapper mapper, IRequestClient<GetUser> getUserClient, int id, CancellationToken cancellationToken)
     {
-        logger.LogDebug("POST /user");
+        logger.Http().Get("/user/{id}");
+
+        var (user, getUserFailed) = await getUserClient.GetResponse<UserObj, IGetUserFailed>(new GetUser(id), cancellationToken).ConfigureAwait(false);
+
+        if (user.IsCompletedSuccessfully)
+        {
+            logger.LogDebug("User was found");
+            var response = await user;
+            return Results.Ok(mapper.Map<GetUserResponse>(response.Message));
+        }
+
+        if (getUserFailed.IsCompletedSuccessfully)
+        {
+            logger.LogDebug("Failed to get user");
+            var response = await getUserFailed;
+
+            switch(response.Message)
+            {
+                case UserNotFound error:
+                    logger.LogDebug("User was not found");
+                    return Results.NotFound(mapper.Map<UserNotFoundResponse>(error));
+            }
+        }
+
+        throw new UnsupportedResponseException();
+    }
+
+    static async Task<IResult> CreateAsync(ILogger<Program> logger, IMapper mapper, IRequestClient<CreateUser> createUserClient, CreateUserRequest request, CancellationToken cancellationToken)
+    {
+        logger.Http().Post("/user");
         var createUser = mapper.Map<CreateUser>(request);
         var (userCreated, createUserFailed) = await createUserClient.GetResponse<UserCreated, ICreateUserFailed>(createUser, cancellationToken).ConfigureAwait(false);
 
