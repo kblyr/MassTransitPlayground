@@ -53,7 +53,7 @@ static class UserEndpoints
     {
         logger.Http().Post("/user");
         var createUser = mapper.Map<CreateUser>(request);
-        var (userCreated, createUserFailed) = await createUserClient.GetResponse<UserCreated, ICreateUserFailed>(createUser, cancellationToken).ConfigureAwait(false);
+        var (userCreated, createUserFailed) = await createUserClient.GetResponse<UserCreated, CreateUserFailed>(createUser, cancellationToken).ConfigureAwait(false);
 
         if (userCreated.IsCompletedSuccessfully)
         {
@@ -67,15 +67,19 @@ static class UserEndpoints
             logger.LogDebug("Create user failed");
             var response = await createUserFailed;
 
-            switch(response.Message)
+            if (response.Message.UsernameAlreadyExists is not null)
             {
-                case UsernameAlreadyExists error:
-                    logger.LogDebug("Username already exists");
-                    return Results.BadRequest(mapper.Map<CreateUserFailedResponse>(error));
-                case UserEmailAddressAlreadyExists error:
-                    logger.LogDebug("User email address already exists");
-                    return Results.BadRequest(mapper.Map<CreateUserFailedResponse>(error));
+                logger.LogDebug("Username already exists");
+                return Results.BadRequest(mapper.Map<CreateUserFailedResponse>(response.Message.UsernameAlreadyExists));
             }
+
+            if (response.Message.EmailAddressAlreadyExists is not null)
+            {
+                logger.LogDebug("User email address already exists");
+                return Results.BadRequest(mapper.Map<CreateUserFailedResponse>(response.Message.EmailAddressAlreadyExists));
+            }
+
+            logger.LogInformation("Message: {Message}", response.Message);
         }
 
         throw new UnsupportedResponseException();

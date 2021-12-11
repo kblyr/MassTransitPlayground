@@ -27,7 +27,7 @@ sealed class CreateUserConsumer : IConsumer<CreateUser>
             _logger.LogTrace("Username already exists");
 
             if (context.RequestId.HasValue)
-                await context.RespondAsync(new UsernameAlreadyExists { Username = context.Message.Username }).ConfigureAwait(false);
+                await context.RespondAsync(new CreateUserFailed { UsernameAlreadyExists = new(context.Message.Username) }).ConfigureAwait(false);
 
             return;
         }
@@ -38,7 +38,7 @@ sealed class CreateUserConsumer : IConsumer<CreateUser>
             _logger.LogTrace("Email address already exists");
 
             if (context.RequestId.HasValue)
-                await context.RespondAsync(new UserEmailAddressAlreadyExists { EmailAddress = context.Message.EmailAddress }).ConfigureAwait(false);
+                await context.RespondAsync(new CreateUserFailed { EmailAddressAlreadyExists = new(context.Message.EmailAddress) }).ConfigureAwait(false);
             
             return;
         }

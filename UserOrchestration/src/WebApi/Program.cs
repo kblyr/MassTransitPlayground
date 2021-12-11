@@ -36,18 +36,18 @@ try
     builder.Services.AddAutoMapper(AutoMapper_MarkedAssemblies());
 
     Log.Information("Adding MassTransit to the DI Container");
-    builder.Services.AddMediator(mediator => {
-        mediator.AddRequestClient<CreateUser>();
-        mediator.AddRequestClient<GetUser>();
-        mediator.AddConsumersFromEntityFrameworkCore();
-    });
-
     builder.Services.AddMassTransit(massTransit => {
+        massTransit.AddRequestClient<CreateUser>();
+        massTransit.AddRequestClient<GetUser>();
+
         massTransit.AddConsumersFromEntityFrameworkCore();
         massTransit.UsingRabbitMq((context, rabbitMq) => {
             rabbitMq.Host("rabbitmq://localhost:5672");
+            rabbitMq.ConfigureEndpoints(context);
         });
     });
+
+    builder.Services.AddMassTransitHostedService();
 
     Log.Information("Added UserOrchestration to the DI Container");
     builder.Services.AddUserOrchestration(userOrchestration => {
