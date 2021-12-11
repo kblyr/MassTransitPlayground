@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserOrchestration.WebApi", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserOrchestration.EntityFrameworkCore", "src\EntityFrameworkCore\UserOrchestration.EntityFrameworkCore.csproj", "{11AC3951-7C80-4E4F-B945-556386B5F3C5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserOrchestration.Core", "src\Core\UserOrchestration.Core.csproj", "{51C9F7B6-20D5-4C68-B803-0E0B551495F1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{11AC3951-7C80-4E4F-B945-556386B5F3C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11AC3951-7C80-4E4F-B945-556386B5F3C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11AC3951-7C80-4E4F-B945-556386B5F3C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51C9F7B6-20D5-4C68-B803-0E0B551495F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51C9F7B6-20D5-4C68-B803-0E0B551495F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51C9F7B6-20D5-4C68-B803-0E0B551495F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51C9F7B6-20D5-4C68-B803-0E0B551495F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{ABB9C9D4-9C9C-4534-A74F-59C8C12D1D0E} = {A5DC18C0-D2C7-4600-900C-80E9B4115E6F}
@@ -51,5 +57,6 @@ Global
 		{39F6F723-20AB-4808-9590-3BAB9B6357E8} = {A5DC18C0-D2C7-4600-900C-80E9B4115E6F}
 		{EC3D9F84-154B-48BC-8870-43529285837D} = {A5DC18C0-D2C7-4600-900C-80E9B4115E6F}
 		{11AC3951-7C80-4E4F-B945-556386B5F3C5} = {A5DC18C0-D2C7-4600-900C-80E9B4115E6F}
+		{51C9F7B6-20D5-4C68-B803-0E0B551495F1} = {A5DC18C0-D2C7-4600-900C-80E9B4115E6F}
 	EndGlobalSection
 EndGlobal
