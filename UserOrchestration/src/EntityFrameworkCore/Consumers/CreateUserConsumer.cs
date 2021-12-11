@@ -17,65 +17,64 @@ sealed class CreateUserConsumer : IConsumer<CreateUser>
 
     public async Task Consume(ConsumeContext<CreateUser> context)
     {
-        _logger.LogTrace("Creating {dbContext}", nameof(UserDbContext));
+        _logger.DbContext().Creating<UserDbContext>();
         using var dbContext = await _contextFactory.CreateDbContextAsync(context.CancellationToken).ConfigureAwait(false);
         using var transaction = await dbContext.Database.BeginTransactionAsync(context.CancellationToken).ConfigureAwait(false);
 
         _logger.LogTrace("Check if username already exists");
-        if (await UsernameExistsAsync(dbContext, context.Message.Username, context.CancellationToken))
+        if (await UsernameExistsAsync(dbContext, context.Message.Username, context.CancellationToken).ConfigureAwait(false))
         {
             _logger.LogTrace("Username already exists");
 
-            _logger.LogTrace("Responding if request");
             if (context.RequestId.HasValue)
-                await context.RespondAsync(new UsernameAlreadyExists { Username = context.Message.Username });
+                await context.RespondAsync(new UsernameAlreadyExists { Username = context.Message.Username }).ConfigureAwait(false);
 
             return;
         }
 
         _logger.LogTrace("Check if email address already exists");
-        if (await EmailAddressExistsAsync(dbContext, context.Message.EmailAddress, context.CancellationToken))
+        if (await EmailAddressExistsAsync(dbContext, context.Message.EmailAddress, context.CancellationToken).ConfigureAwait(false))
         {
             _logger.LogTrace("Email address already exists");
 
-            _logger.LogTrace("Responding if request");
             if (context.RequestId.HasValue)
-                await context.RespondAsync(new UserEmailAddressAlreadyExists { EmailAddress = context.Message.EmailAddress });
+                await context.RespondAsync(new UserEmailAddressAlreadyExists { EmailAddress = context.Message.EmailAddress }).ConfigureAwait(false);
             
             return;
         }
 
-        _logger.LogTrace("Mapping {mapFrom} to {mapTo}", nameof(CreateUser), nameof(User));
+        _logger.Mapper().Mapping<CreateUser, User>();
         var user = _mapper.Map<User>(context.Message);
         user.HashedPassword = _passwordHashingService.ComputeHash(context.Message.Password);
 
-        _logger.LogTrace("Adding user locally");
+        _logger.DbContext().AddingEntityLocally<User>();
         dbContext.Users.Add(user);
 
-        _logger.LogTrace("Saving changes to database");
-        await dbContext.SaveChangesAsync(context.CancellationToken);
+        _logger.DbContext().SavingChanges();
+        await dbContext.SaveChangesAsync(context.CancellationToken).ConfigureAwait(false);
 
-        _logger.LogTrace("Mapping {mapFrom} to {mapTo}", nameof(User), nameof(UserCreated));
+        _logger.Mapper().Mapping<User, UserCreated>();
         var @event = _mapper.Map<UserCreated>(user);
         
-        _logger.LogTrace("Responding if request");
         if (context.RequestId.HasValue)
-            await context.RespondAsync(@event);
+            await context.RespondAsync(@event).ConfigureAwait(false);
 
-        _logger.LogTrace("Publishing event: {event}", nameof(UserCreated));
-        await context.Publish(@event);
+        _logger.Event().Publishing<UserCreated>();
+        await context.Publish(@event).ConfigureAwait(false);
         
-        _logger.LogTrace("Committing transaction");
+        _logger.DbContext().CommittingTransaction();
         await transaction.CommitAsync(context.CancellationToken).ConfigureAwait(false);
     }
 
     static async Task<bool> UsernameExistsAsync(UserDbContext context, string username, CancellationToken cancellationToken) => await context.Users
         .AsNoTracking()
         .Where(user => user.Username == username)
-        .AnyAsync(cancellationToken);
+        .AnyAsync(cancellationToken)
+        .ConfigureAwait(false);
 
     static async Task<bool> EmailAddressExistsAsync(UserDbContext context, string emailAddress, CancellationToken cancellationToken) => await context.Users
         .AsNoTracking()
         .Where(user => user.EmailAddress == emailAddress)
-        .AnyAsync(cancellationToken);
+        .AnyAsync(cancellationToken)
+        .ConfigureAwait(false);
 }
