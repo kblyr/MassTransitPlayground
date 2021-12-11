@@ -7,7 +7,30 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="MassTransit" Version="7.3.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\UserOrchestration.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="AutoMapper" />
+    <Using Include="MassTransit" />
+    <Using Include="Microsoft.EntityFrameworkCore" />
+    <Using Include="Microsoft.EntityFrameworkCore.Metadata.Builders" />
+    <Using Include="Microsoft.Extensions.Logging" />
+    <Using Include="UserOrchestration.Commands" />
+    <Using Include="UserOrchestration.Consumers" />
+    <Using Include="UserOrchestration.Data" />
+    <Using Include="UserOrchestration.Entities" />
+    <Using Include="UserOrchestration.EntityFrameworkCore" />
+    <Using Include="UserOrchestration.Events" />
+    <Using Include="UserOrchestration.Responses" />
+    <Using Include="UserOrchestration.Utilities" />
   </ItemGroup>
 
 </Project>
