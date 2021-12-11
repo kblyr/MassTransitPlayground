@@ -43,6 +43,9 @@ try
         massTransit.AddRequestClient<DeactivateUser>();
 
         massTransit.AddConsumersFromEntityFrameworkCore();
+        
+        massTransit.SetKebabCaseEndpointNameFormatter();
+
         massTransit.UsingRabbitMq((context, rabbitMq) => {
             rabbitMq.Host("rabbitmq://localhost:5672");
             rabbitMq.ConfigureEndpoints(context);
