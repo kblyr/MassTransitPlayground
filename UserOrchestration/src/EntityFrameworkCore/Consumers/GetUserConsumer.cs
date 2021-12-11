@@ -1,5 +1,3 @@
-using AutoMapper.QueryableExtensions;
-
 sealed class GetUserConsumer : IConsumer<GetUser>
 {
     readonly ILogger<GetUserConsumer> _logger;
@@ -31,15 +29,16 @@ sealed class GetUserConsumer : IConsumer<GetUser>
             .FirstOrDefaultAsync(context.CancellationToken)
             .ConfigureAwait(false);
 
-        if (!context.RequestId.HasValue)
-            return;
-
-        if (user is null)
+        if (context.RequestId.HasValue)
         {
-            await context.RespondAsync(new UserNotFound(context.Message.Id)).ConfigureAwait(false);
-            return;
-        }
+            if (user is null)
+            {
+                _logger.LogTrace("User does not exists");
+                await context.RespondAsync(new GetUserFailed { NotFound = new(context.Message.Id) }).ConfigureAwait(false);
+                return;
+            }
 
-        await context.RespondAsync(user).ConfigureAwait(false);
+            await context.RespondAsync(user).ConfigureAwait(false);
+        }
     }
 }
