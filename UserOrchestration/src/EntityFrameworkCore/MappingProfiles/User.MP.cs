@@ -21,5 +21,6 @@ sealed class UserMP : Profile
         CreateMap<UserAlreadyDeactivated, DeactivateUserFailed>()
             .ForMember(dest => dest.AlreadyDeactivated, config => config.MapFrom(src => src));
         CreateMap<User, UserCreated>();
+        CreateMap<User, SendUserEmailVerification>();
     }
 }
