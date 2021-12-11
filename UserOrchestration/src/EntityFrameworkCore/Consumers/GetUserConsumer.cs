@@ -2,11 +2,13 @@ sealed class GetUserConsumer : IConsumer<GetUser>
 {
     readonly ILogger<GetUserConsumer> _logger;
     readonly IDbContextFactory<UserDbContext> _contextFactory;
+    readonly IMapper _mapper;
 
-    public GetUserConsumer(ILogger<GetUserConsumer> logger, IDbContextFactory<UserDbContext> contextFactory)
+    public GetUserConsumer(ILogger<GetUserConsumer> logger, IDbContextFactory<UserDbContext> contextFactory, IMapper mapper)
     {
         _logger = logger;
         _contextFactory = contextFactory;
+        _mapper = mapper;
     }
 
     public async Task Consume(ConsumeContext<GetUser> context)
@@ -29,16 +31,17 @@ sealed class GetUserConsumer : IConsumer<GetUser>
             .FirstOrDefaultAsync(context.CancellationToken)
             .ConfigureAwait(false);
 
-        if (context.RequestId.HasValue)
-        {
-            if (user is null)
-            {
-                _logger.LogTrace("User does not exists");
-                await context.RespondAsync(new GetUserFailed { NotFound = new(context.Message.Id) }).ConfigureAwait(false);
-                return;
-            }
+        if (!context.RequestId.HasValue)
+            return;
 
-            await context.RespondAsync(user).ConfigureAwait(false);
+        if (user is null)
+        {
+            _logger.LogTrace("User does not exists");
+            var response = _mapper.Map<GetUserFailed>(new UserNotFound(context.Message.Id));
+            await context.RespondAsync(response).ConfigureAwait(false);
+            return;
         }
+
+        await context.RespondAsync(user).ConfigureAwait(false);
     }
 }

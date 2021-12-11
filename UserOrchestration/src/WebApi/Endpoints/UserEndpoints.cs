@@ -9,7 +9,7 @@ static class UserEndpoints
         builder.MapGet("/user/{id}", GetAsync)
             .WithTags("User")
             .Produces<GetUserResponse>(StatusCodes.Status200OK)
-            .Produces<GetUserFailedResponse>(StatusCodes.Status404NotFound);
+            .Produces<GetUserFailedResponse>(StatusCodes.Status400BadRequest);
 
         builder.MapPost("/user", CreateAsync)
             .WithTags("User")
@@ -20,8 +20,7 @@ static class UserEndpoints
         builder.MapPut("/user/{id}/activate", ActivateAsync)
             .WithTags("User")
             .Produces(StatusCodes.Status204NoContent)
-            .Produces<ActivateUserFailed>(StatusCodes.Status404NotFound)
-            .Produces<ActivateUserFailed>(StatusCodes.Status400BadRequest);
+            .Produces<ActivateUserFailedResponse>(StatusCodes.Status400BadRequest);
 
         return builder;
     }
@@ -43,12 +42,7 @@ static class UserEndpoints
         {
             logger.LogDebug("Failed to get user");
             var response = await getUserFailed;
-
-            if (response.Message.NotFound is not null)
-            {
-                logger.LogDebug("User was not found");
-                return Results.NotFound(mapper.Map<UserNotFoundResponse>(response.Message.NotFound));
-            }
+            return Results.BadRequest(mapper.Map<GetUserFailedResponse>(response.Message));
         }
 
         throw new UnsupportedResponseException();
@@ -71,18 +65,7 @@ static class UserEndpoints
         {
             logger.LogDebug("Create user failed");
             var response = await createUserFailed.ConfigureAwait(false);
-
-            if (response.Message.UsernameAlreadyExists is not null)
-            {
-                logger.LogDebug("Username already exists");
-                return Results.BadRequest(mapper.Map<CreateUserFailedResponse>(response.Message.UsernameAlreadyExists));
-            }
-
-            if (response.Message.EmailAddressAlreadyExists is not null)
-            {
-                logger.LogDebug("User email address already exists");
-                return Results.BadRequest(mapper.Map<CreateUserFailedResponse>(response.Message.EmailAddressAlreadyExists));
-            }
+            return Results.BadRequest(mapper.Map<CreateUserFailedResponse>(response.Message));
         }
 
         throw new UnsupportedResponseException();
@@ -104,18 +87,7 @@ static class UserEndpoints
         {
             logger.LogDebug("Activate user failed");
             var response = await activateUserFailed.ConfigureAwait(false);
-
-            if (response.Message.NotFound is not null)
-            {
-                logger.LogDebug("User was not found");
-                return Results.NotFound(mapper.Map<ActivateUserFailedResponse>(response.Message.NotFound));
-            }
-
-            if (response.Message.AlreadyActivated is not null)
-            {
-                logger.LogDebug("User is already activated");
-                return Results.BadRequest(mapper.Map<ActivateUserFailedResponse>(response.Message.AlreadyActivated));
-            }
+            return Results.BadRequest(mapper.Map<ActivateUserFailedResponse>(response.Message));
         }
 
         throw new UnsupportedResponseException();

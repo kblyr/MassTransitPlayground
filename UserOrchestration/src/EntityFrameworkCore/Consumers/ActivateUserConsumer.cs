@@ -4,11 +4,13 @@ sealed class ActivateUserConsumer : IConsumer<ActivateUser>
 {
     readonly ILogger<ActivateUserConsumer> _logger;
     readonly IDbContextFactory<UserDbContext> _contextFactory;
+    readonly IMapper _mapper;
 
-    public ActivateUserConsumer(ILogger<ActivateUserConsumer> logger, IDbContextFactory<UserDbContext> contextFactory)
+    public ActivateUserConsumer(ILogger<ActivateUserConsumer> logger, IDbContextFactory<UserDbContext> contextFactory, IMapper mapper)
     {
         _logger = logger;
         _contextFactory = contextFactory;
+        _mapper = mapper;
     }
 
     public async Task Consume(ConsumeContext<ActivateUser> context)
@@ -29,8 +31,11 @@ sealed class ActivateUserConsumer : IConsumer<ActivateUser>
         {
             _logger.LogTrace("User does not exists");
 
-            if (context.RequestId.HasValue) 
-                await context.RespondAsync(new ActivateUserFailed { NotFound = new(context.Message.Id) }).ConfigureAwait(false);
+            if (context.RequestId.HasValue)
+            {
+                var response = _mapper.Map<ActivateUserFailed>(new UserNotFound(context.Message.Id));
+                await context.RespondAsync(response).ConfigureAwait(false);
+            }
 
             return;
         }
@@ -41,7 +46,10 @@ sealed class ActivateUserConsumer : IConsumer<ActivateUser>
             _logger.LogTrace("User already is active");
 
             if (context.RequestId.HasValue)
-                await context.RespondAsync(new ActivateUserFailed { AlreadyActivated = new(context.Message.Id) }).ConfigureAwait(false);
+            {
+                var response = _mapper.Map<ActivateUserFailed>(new UserAlreadyActivated(context.Message.Id));
+                await context.RespondAsync(response).ConfigureAwait(false);
+            }
 
             return;
         }

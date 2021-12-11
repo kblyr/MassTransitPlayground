@@ -10,18 +10,11 @@ sealed class UserMP : Profile
         CreateMap<UserAlreadyActivated, UserAlreadyActivatedResponse>();
 
         CreateMap<CreateUserRequest, CreateUser>();
-        CreateMap<UsernameAlreadyExists, CreateUserFailedResponse>()
-            .ForMember(dest => dest.UsernameAlreadyExists, config => config.MapFrom(src => src));
-        CreateMap<UserEmailAddressAlreadyExists, CreateUserFailedResponse>()
-            .ForMember(dest => dest.EmailAddressAlreadyExists, config => config.MapFrom(src => src));
+        CreateMap<CreateUserFailed, CreateUserFailedResponse>();
 
         CreateMap<UserObj, GetUserResponse>();
-        CreateMap<UserNotFound, GetUserFailedResponse>()
-            .ForMember(dest => dest.NotFound, config => config.MapFrom(src => src));
+        CreateMap<GetUserFailed, GetUserFailedResponse>();
 
-        CreateMap<UserNotFound, ActivateUserFailedResponse>()
-            .ForMember(dest => dest.NotFound, config => config.MapFrom(src => src));
-        CreateMap<UserAlreadyActivated, ActivateUserFailedResponse>()
-            .ForMember(dest => dest.AlreadyActivated, config => config.MapFrom(src => src));
+        CreateMap<ActivateUserFailed, ActivateUserFailedResponse>();
     }
 }
