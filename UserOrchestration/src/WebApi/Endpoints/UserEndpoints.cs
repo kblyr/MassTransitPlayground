@@ -17,6 +17,12 @@ static class UserEndpoints
             .Produces<int>(StatusCodes.Status201Created)
             .Produces<CreateUserFailedResponse>(StatusCodes.Status400BadRequest);
 
+        builder.MapPut("/user/{id}/activate", ActivateAsync)
+            .WithTags("User")
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces<ActivateUserFailed>(StatusCodes.Status404NotFound)
+            .Produces<ActivateUserFailed>(StatusCodes.Status400BadRequest);
+
         return builder;
     }
 
@@ -57,14 +63,14 @@ static class UserEndpoints
         if (userCreated.IsCompletedSuccessfully)
         {
             logger.LogDebug("Create user succeeded");
-            var response = await userCreated;
+            var response = await userCreated.ConfigureAwait(false);
             return Results.Created($"/user/{response.Message.Id}", response.Message.Id);
         }
         
         if (createUserFailed.IsCompletedSuccessfully)
         {
             logger.LogDebug("Create user failed");
-            var response = await createUserFailed;
+            var response = await createUserFailed.ConfigureAwait(false);
 
             if (response.Message.UsernameAlreadyExists is not null)
             {
@@ -77,8 +83,39 @@ static class UserEndpoints
                 logger.LogDebug("User email address already exists");
                 return Results.BadRequest(mapper.Map<CreateUserFailedResponse>(response.Message.EmailAddressAlreadyExists));
             }
+        }
 
-            logger.LogInformation("Message: {Message}", response.Message);
+        throw new UnsupportedResponseException();
+    }
+
+    static async Task<IResult> ActivateAsync(ILogger<Program> logger, IMapper mapper, IRequestClient<ActivateUser> activateUserClient, int id, CancellationToken cancellationToken)
+    {
+        logger.Http().Put("/user/{id}/activate");
+        var (userActivated, activateUserFailed) = await activateUserClient.GetResponse<UserActivated, ActivateUserFailed>(new ActivateUser(id), cancellationToken).ConfigureAwait(false);
+
+        if (userActivated.IsCompletedSuccessfully)
+        {
+            logger.LogDebug("Activate user succeeded");
+            var response = await userActivated.ConfigureAwait(false);
+            return Results.NoContent();
+        }
+
+        if (activateUserFailed.IsCompletedSuccessfully)
+        {
+            logger.LogDebug("Activate user failed");
+            var response = await activateUserFailed.ConfigureAwait(false);
+
+            if (response.Message.NotFound is not null)
+            {
+                logger.LogDebug("User was not found");
+                return Results.NotFound(mapper.Map<ActivateUserFailedResponse>(response.Message.NotFound));
+            }
+
+            if (response.Message.AlreadyActivated is not null)
+            {
+                logger.LogDebug("User is already activated");
+                return Results.BadRequest(mapper.Map<ActivateUserFailedResponse>(response.Message.AlreadyActivated));
+            }
         }
 
         throw new UnsupportedResponseException();

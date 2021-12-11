@@ -37,6 +37,7 @@ try
 
     Log.Information("Adding MassTransit to the DI Container");
     builder.Services.AddMassTransit(massTransit => {
+        massTransit.AddRequestClient<ActivateUser>();
         massTransit.AddRequestClient<CreateUser>();
         massTransit.AddRequestClient<GetUser>();
 

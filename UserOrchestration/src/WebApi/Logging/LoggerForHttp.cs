@@ -9,4 +9,6 @@ public sealed class LoggerForHttp
     public void Get(string routeTemplate) => Logger.LogTrace("GET: {RouteTemplate}", routeTemplate);
 
     public void Post(string routeTemplate) => Logger.LogTrace("POST: {RouteTemplate}", routeTemplate);
+
+    public void Put(string routeTemplate) => Logger.LogTrace("PUT: {RouteTemplate}", routeTemplate);
 }

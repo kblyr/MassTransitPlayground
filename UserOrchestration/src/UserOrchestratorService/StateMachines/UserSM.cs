@@ -1,6 +1,6 @@
 namespace UserOrchestration.StateMachines;
 
-public sealed class UserSM : MassTransitStateMachine<UserSMI>
+sealed class UserSM : MassTransitStateMachine<UserSMI>
 {
     ILogger<UserSM> _logger;
     public UserSM(ILogger<UserSM> logger)
@@ -16,12 +16,20 @@ public sealed class UserSM : MassTransitStateMachine<UserSMI>
     public State Inactive { get; private set; } = default!;
 
     public Event<UserCreated> UserCreated { get; private set; } = default!;
+    public Event<UserActivated> UserActivated { get; private set; } = default!;
 
     void ConfigureEvents()
     {
         _logger.LogTrace("Configuring events");
 
         Event(() => UserCreated,
+            correlation => {
+                correlation.CorrelateBy((instance, context) => instance.UserId == context.Message.Id)
+                    .SelectId(context => NewId.NextGuid());
+            }
+        );
+
+        Event(() => UserActivated,
             correlation => {
                 correlation.CorrelateBy((instance, context) => instance.UserId == context.Message.Id)
                     .SelectId(context => NewId.NextGuid());
@@ -39,7 +47,22 @@ public sealed class UserSM : MassTransitStateMachine<UserSMI>
                 .TransitionTo(Active),
             When(UserCreated, context => context.Data.IsActive == false)
                 .Then(OnUserCreated)
-                .TransitionTo(Inactive)
+                .TransitionTo(Inactive),
+            When(UserActivated)
+                .Then(OnUserActivated)
+                .TransitionTo(Active)
+        );
+
+        During(Active,
+            Ignore(UserCreated),
+            Ignore(UserActivated)
+        );
+
+        During(Inactive,
+            Ignore(UserCreated),
+            When(UserActivated)
+                .Then(OnUserActivated)
+                .TransitionTo(Active)
         );
     }
 
@@ -49,9 +72,16 @@ public sealed class UserSM : MassTransitStateMachine<UserSMI>
         context.Instance.UserId = context.Data.Id;
         context.Instance.IsActive = context.Data.IsActive;
     }
+
+    void OnUserActivated(BehaviorContext<UserSMI, UserActivated> context)
+    {
+        _logger.LogTrace("User was activated");
+        context.Instance.UserId = context.Data.Id;
+        context.Instance.IsActive = true;
+    }
 }
 
-public record UserSMI : SagaStateMachineInstance, ISagaVersion
+record UserSMI : SagaStateMachineInstance, ISagaVersion
 {
     public Guid CorrelationId { get; set; }
     public int Version { get; set; }
