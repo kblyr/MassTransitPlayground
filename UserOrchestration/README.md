@@ -20,6 +20,6 @@ A background worker service that is used to handle the state of **Email Verifica
 A background worker service that is used to handle the state of **User**
 
 ## WebApi
-A resource endpoint interface for the client.
+A resource endpoint interface accessible for the client.
 
 By design, it should be the only part of the system that is publicly available (not including the front-end UI of course)
