@@ -24,7 +24,7 @@ static class UserEndpoints
     {
         logger.Http().Get("/user/{id}");
 
-        var (user, getUserFailed) = await getUserClient.GetResponse<UserObj, IGetUserFailed>(new GetUser(id), cancellationToken).ConfigureAwait(false);
+        var (user, getUserFailed) = await getUserClient.GetResponse<UserObj, GetUserFailed>(new GetUser(id), cancellationToken).ConfigureAwait(false);
 
         if (user.IsCompletedSuccessfully)
         {
@@ -38,11 +38,10 @@ static class UserEndpoints
             logger.LogDebug("Failed to get user");
             var response = await getUserFailed;
 
-            switch(response.Message)
+            if (response.Message.NotFound is not null)
             {
-                case UserNotFound error:
-                    logger.LogDebug("User was not found");
-                    return Results.NotFound(mapper.Map<UserNotFoundResponse>(error));
+                logger.LogDebug("User was not found");
+                return Results.NotFound(mapper.Map<UserNotFoundResponse>(response.Message.NotFound));
             }
         }
 

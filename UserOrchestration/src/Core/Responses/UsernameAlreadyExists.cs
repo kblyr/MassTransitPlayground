@@ -1,6 +1,6 @@
 namespace UserOrchestration.Responses;
 
-public record UsernameAlreadyExists : ICreateUserFailed
+public record UsernameAlreadyExists
 {
     public string Username { get; init; } = "";
 

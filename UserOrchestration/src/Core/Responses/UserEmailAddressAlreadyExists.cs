@@ -1,6 +1,6 @@
 namespace UserOrchestration.Responses;
 
-public record UserEmailAddressAlreadyExists : ICreateUserFailed
+public record UserEmailAddressAlreadyExists
 {
     public string EmailAddress { get; init; } = "";
 

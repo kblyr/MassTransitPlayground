@@ -1,6 +1,6 @@
 namespace UserOrchestration.Responses;
 
-public record UserNotFound : IGetUserFailed
+public record UserNotFound
 {
     public int Id { get; init; }
 
