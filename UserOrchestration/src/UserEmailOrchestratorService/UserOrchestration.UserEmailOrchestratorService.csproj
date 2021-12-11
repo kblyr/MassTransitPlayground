@@ -22,9 +22,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Using Include="AutoMapper" />
     <Using Include="Automatonymous" />
     <Using Include="MassTransit" />
     <Using Include="MassTransit.Saga" />
+    <Using Include="UserOrchestration.Commands" />
     <Using Include="UserOrchestration.Events" />
     <Using Include="UserOrchestration.StateMachines" />
   </ItemGroup>

@@ -67,13 +67,6 @@ sealed class CreateUserConsumer : IConsumer<CreateUser>
 
         _logger.Event().Publishing<UserCreated>();
         await context.Publish(@event).ConfigureAwait(false);
-
-        if (!user.IsEmailVerified)
-        {
-            _logger.Event().Publishing<SendUserEmailVerification>();
-            var command = _mapper.Map<SendUserEmailVerification>(user);
-            await context.Publish(command).ConfigureAwait(false);
-        }
         
         _logger.DbContext().CommittingTransaction();
         await transaction.CommitAsync(context.CancellationToken).ConfigureAwait(false);
