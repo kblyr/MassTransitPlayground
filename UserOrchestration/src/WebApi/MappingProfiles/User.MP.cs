@@ -15,5 +15,8 @@ sealed class UserMP : Profile
         CreateMap<GetUserFailed, GetUserFailedResponse>();
         CreateMap<ActivateUserFailed, ActivateUserFailedResponse>();
         CreateMap<DeactivateUserFailed, DeactivateUserFailedResponse>();
+        CreateMap<UserEmailNotFound, UserEmailNotFoundResponse>();
+        CreateMap<UserEmailAlreadyVerified, UserEmailAlreadyVerifiedResponse>();
+        CreateMap<VerifyUserEmailFailed, VerifyUserEmailFailedResponse>();
     }
 }

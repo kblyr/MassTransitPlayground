@@ -1,6 +1,6 @@
-namespace UserOrchestration.Events;
+namespace UserOrchestration.Responses;
 
-public record UserEmailVerificationSent
+public record UserEmailAlreadyVerified
 {
     public int Id { get; init; }
     public string EmailAddress { get; init; } = "";

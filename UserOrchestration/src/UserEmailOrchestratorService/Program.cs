@@ -1,3 +1,4 @@
+using System.Reflection;
 using Serilog;
 using Serilog.Events;
 
@@ -24,11 +25,12 @@ try
 
     Log.Information("Adding services to the DI Container");
     builder.ConfigureServices(services => {
+        services.AddAutoMapper(AutoMapper_MarkedAssemblies());
         services.AddMassTransit(massTransit => {
             massTransit.AddSagaStateMachine<UserEmailVerificationSM, UserEmailVerificationSMI>()
                 .MongoDbRepository("mongodb://root:root@localhost:27017/?authSource=admin&readPreference=primary", config => {
                     config.DatabaseName = "user_orchestration";
-                    config.CollectionName = "user_sm";
+                    config.CollectionName = "user_verification_sm";
                 });
 
             massTransit.SetKebabCaseEndpointNameFormatter();
@@ -57,3 +59,8 @@ finally
     Log.Information("Shutdown complete");
     Log.CloseAndFlush();
 }
+
+static Assembly[] AutoMapper_MarkedAssemblies() => new Assembly[]
+{
+    UserOrchestration.Core.AssemblyMarker.Assembly
+};

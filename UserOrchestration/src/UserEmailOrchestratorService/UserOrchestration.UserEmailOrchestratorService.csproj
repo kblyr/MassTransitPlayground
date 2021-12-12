@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="MassTransit.AspNetCore" Version="7.3.0" />
     <PackageReference Include="MassTransit.MongoDb" Version="7.3.0" />
     <PackageReference Include="MassTransit.RabbitMq" Version="7.3.0" />

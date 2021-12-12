@@ -20,6 +20,7 @@ sealed class UserEmailVerificationSM : MassTransitStateMachine<UserEmailVerifica
 
     public Event<UserCreated> UserCreated { get; private set; } = default!;
     public Event<UserEmailVerificationSent> UserEmailVerificationSent { get; private set; } = default!;
+    public Event<UserEmailVerified> UserEmailVerified { get; private set; } = default!;
 
     void ConfigureEvents()
     {
@@ -38,6 +39,13 @@ sealed class UserEmailVerificationSM : MassTransitStateMachine<UserEmailVerifica
                     .SelectId(context => NewId.NextGuid());
             }
         );
+
+        Event(() => UserEmailVerified,
+            correlation => {
+                correlation.CorrelateBy((instance, context) => instance.UserId == context.Message.Id && instance.EmailAddress == context.Message.EmailAddress);
+                correlation.OnMissingInstance(instance => instance.Discard());
+            }
+        );
     }
 
     void ConfigureEventActivities()
@@ -46,6 +54,7 @@ sealed class UserEmailVerificationSM : MassTransitStateMachine<UserEmailVerifica
 
         Initially(
             Ignore(UserCreated, context => context.Data.IsEmailVerified == true),
+            Ignore(UserEmailVerified),
             When(UserCreated, context => context.Data.IsEmailVerified == false)
                 .Then(OnUserCreated)
                 .Publish(context => _mapper.Map<SendUserEmailVerification>(context.Data))
@@ -59,7 +68,18 @@ sealed class UserEmailVerificationSM : MassTransitStateMachine<UserEmailVerifica
             Ignore(UserCreated),
             When(UserEmailVerificationSent)
                 .Then(OnUserEmailVerificationSent)
-                .TransitionTo(Sent)
+                .TransitionTo(Sent),
+            When(UserEmailVerified)
+                .Then(OnUserEmailVerified)
+                .Finalize()
+        );
+
+        During(Sent,
+            Ignore(UserCreated),
+            Ignore(UserEmailVerificationSent),
+            When(UserEmailVerified)
+                .Then(OnUserEmailVerified)
+                .Finalize()
         );
     }
 
@@ -73,6 +93,11 @@ sealed class UserEmailVerificationSM : MassTransitStateMachine<UserEmailVerifica
     void OnUserEmailVerificationSent(BehaviorContext<UserEmailVerificationSMI, UserEmailVerificationSent> context)
     {
         _logger.LogInformation("User email verification was sent");
+    }
+
+    void OnUserEmailVerified(BehaviorContext<UserEmailVerificationSMI, UserEmailVerified> context)
+    {
+        _logger.LogInformation("User email has been verified");
     }
 }
 

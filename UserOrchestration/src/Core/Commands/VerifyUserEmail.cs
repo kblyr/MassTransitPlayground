@@ -1,13 +1,13 @@
 namespace UserOrchestration.Commands;
 
-public record SendUserEmailVerification
+public record VerifyUserEmail
 {
     public int Id { get; init; }
     public string EmailAddress { get; init; } = "";
 
-    public SendUserEmailVerification() { }
+    public VerifyUserEmail() { }
 
-    public SendUserEmailVerification(int id, string emailAddress) 
+    public VerifyUserEmail(int id, string emailAddress)
     {
         Id = id;
         EmailAddress = emailAddress;

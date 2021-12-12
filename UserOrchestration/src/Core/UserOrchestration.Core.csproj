@@ -19,6 +19,7 @@
     <Using Include="UserOrchestration.Commands" />
     <Using Include="UserOrchestration.Core" />
     <Using Include="UserOrchestration.Events" />
+    <Using Include="UserOrchestration.Responses" />
   </ItemGroup>
 
 </Project>

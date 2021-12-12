@@ -27,6 +27,11 @@ static class UserEndpoints
             .Produces(StatusCodes.Status204NoContent)
             .Produces<DeactivateUserFailedResponse>(StatusCodes.Status400BadRequest);
 
+        builder.MapPut("/user/{id}/email/verify", VerifyEmailAsync)
+            .WithTags("User")
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces<VerifyUserEmailFailedResponse>(StatusCodes.Status400BadRequest);
+
         return builder;
     }
 
@@ -115,6 +120,28 @@ static class UserEndpoints
             logger.LogDebug("Deactivate user failed");
             var response = await deactivateUserFailed.ConfigureAwait(false);
             return Results.BadRequest(mapper.Map<DeactivateUserFailedResponse>(response.Message));
+        }
+
+        throw new UnsupportedResponseException();
+    }
+
+    static async Task<IResult> VerifyEmailAsync(ILogger<Program> logger, IMapper mapper, IRequestClient<VerifyUserEmail> verifyUserEmailClient, int id, VerifyUserEmailRequest request, CancellationToken cancellationToken)
+    {
+        logger.Http().Put("/user/{id}/email/verify");
+        var (userEmailVerified, verifyUserEmailFailed) = await verifyUserEmailClient.GetResponse<UserEmailVerified, VerifyUserEmailFailed>(new VerifyUserEmail(id, request.EmailAddress), cancellationToken).ConfigureAwait(false);
+
+        if (userEmailVerified.IsCompletedSuccessfully)
+        {
+            logger.LogDebug("Verify user email succeeded");
+            var response = await userEmailVerified.ConfigureAwait(false);
+            return Results.NoContent();
+        }
+
+        if (verifyUserEmailFailed.IsCompletedSuccessfully)
+        {
+            logger.LogDebug("Verify user email failed");
+            var response = await verifyUserEmailFailed.ConfigureAwait(false);
+            return Results.BadRequest(mapper.Map<VerifyUserEmailFailedResponse>(response.Message));
         }
 
         throw new UnsupportedResponseException();

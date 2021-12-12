@@ -8,5 +8,6 @@ public static class IRegistrationConfiguratorExtensions
         configurator.AddConsumer<GetUserConsumer>();
         configurator.AddConsumer<ActivateUserConsumer>();
         configurator.AddConsumer<DeactivateUserConsumer>();
+        configurator.AddConsumer<VerifyUserEmailConsumer>();
     }
 }

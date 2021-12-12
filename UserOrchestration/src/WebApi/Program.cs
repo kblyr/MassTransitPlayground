@@ -41,6 +41,7 @@ try
         massTransit.AddRequestClient<GetUser>();
         massTransit.AddRequestClient<ActivateUser>();
         massTransit.AddRequestClient<DeactivateUser>();
+        massTransit.AddRequestClient<VerifyUserEmail>();
 
         massTransit.AddConsumersFromEntityFrameworkCore();
         
@@ -98,6 +99,7 @@ finally
 
 static Assembly[] AutoMapper_MarkedAssemblies() => new Assembly[]
 {
+    UserOrchestration.Core.AssemblyMarker.Assembly,
     UserOrchestration.EntityFrameworkCore.AssemblyMarker.Assembly,
     UserOrchestration.WebApi.AssemblyMarker.Assembly
 };
