@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FE2B01D3-D3A0-4D8B-B3F7-5BD591EE0A82}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediatorTest.Core", "src\Core\MediatorTest.Core.csproj", "{0E3A4F0B-4458-49A2-BE3E-E723BF30386D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediatorTest.WebApi", "src\WebApi\MediatorTest.WebApi.csproj", "{6198F754-F230-4B70-9FCD-45374CFDB8F4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0E3A4F0B-4458-49A2-BE3E-E723BF30386D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E3A4F0B-4458-49A2-BE3E-E723BF30386D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E3A4F0B-4458-49A2-BE3E-E723BF30386D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E3A4F0B-4458-49A2-BE3E-E723BF30386D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6198F754-F230-4B70-9FCD-45374CFDB8F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6198F754-F230-4B70-9FCD-45374CFDB8F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6198F754-F230-4B70-9FCD-45374CFDB8F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6198F754-F230-4B70-9FCD-45374CFDB8F4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0E3A4F0B-4458-49A2-BE3E-E723BF30386D} = {FE2B01D3-D3A0-4D8B-B3F7-5BD591EE0A82}
+		{6198F754-F230-4B70-9FCD-45374CFDB8F4} = {FE2B01D3-D3A0-4D8B-B3F7-5BD591EE0A82}
+	EndGlobalSection
+EndGlobal
