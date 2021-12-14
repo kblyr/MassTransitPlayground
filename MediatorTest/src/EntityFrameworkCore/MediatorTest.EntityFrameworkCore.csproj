@@ -6,4 +6,26 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="MassTransit" Version="7.3.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\MediatorTest.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="AutoMapper" />
+    <Using Include="MassTransit" />
+    <Using Include="MediatorTest.Commands" />
+    <Using Include="MediatorTest.Data" />
+    <Using Include="MediatorTest.Entities" />
+    <Using Include="MediatorTest.EntityFrameworkCore" />
+    <Using Include="MediatorTest.Responses" />
+    <Using Include="Microsoft.EntityFrameworkCore" />
+    <Using Include="Microsoft.Extensions.Logging" />
+  </ItemGroup>
 </Project>
