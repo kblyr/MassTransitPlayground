@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediatorTest.Core", "src\Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediatorTest.WebApi", "src\WebApi\MediatorTest.WebApi.csproj", "{6198F754-F230-4B70-9FCD-45374CFDB8F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediatorTest.EntityFrameworkCore", "src\EntityFrameworkCore\MediatorTest.EntityFrameworkCore.csproj", "{9A490CC1-D8E8-4D04-9423-0E682EACBB5B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,9 +28,14 @@ Global
 		{6198F754-F230-4B70-9FCD-45374CFDB8F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6198F754-F230-4B70-9FCD-45374CFDB8F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6198F754-F230-4B70-9FCD-45374CFDB8F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A490CC1-D8E8-4D04-9423-0E682EACBB5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A490CC1-D8E8-4D04-9423-0E682EACBB5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A490CC1-D8E8-4D04-9423-0E682EACBB5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A490CC1-D8E8-4D04-9423-0E682EACBB5B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{0E3A4F0B-4458-49A2-BE3E-E723BF30386D} = {FE2B01D3-D3A0-4D8B-B3F7-5BD591EE0A82}
 		{6198F754-F230-4B70-9FCD-45374CFDB8F4} = {FE2B01D3-D3A0-4D8B-B3F7-5BD591EE0A82}
+		{9A490CC1-D8E8-4D04-9423-0E682EACBB5B} = {FE2B01D3-D3A0-4D8B-B3F7-5BD591EE0A82}
 	EndGlobalSection
 EndGlobal
